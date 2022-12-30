@@ -1,7 +1,10 @@
 package com.delivery.kyh.adapter.out.persistence;
 
 import com.delivery.kyh.domain.Member;
+import com.delivery.kyh.domain.vo.Authority;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 public class MemberMapper {
@@ -10,16 +13,18 @@ public class MemberMapper {
             member.getId() == null ? null : member.getId(),
             member.getLoginId(),
             member.getPassword(),
-            member.getName()
+            member.getName(),
+            Authority.USER
         );
     }
 
-    public Member toDomainEntity(MemberJpaEntity entity) {
-        return Member.create(
-            entity.getId(),
-            entity.getLoginId(),
-            entity.getPassword(),
-            entity.getName()
-        );
+    public Optional<Member> toDomainEntity(Optional<MemberJpaEntity> memberJpaEntity) {
+        return memberJpaEntity.map(m -> Member.create(
+            m.getId(),
+            m.getLoginId(),
+            m.getPassword(),
+            m.getName(),
+            m.getAuthority().name()
+        ));
     }
 }

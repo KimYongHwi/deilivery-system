@@ -17,12 +17,19 @@ public class Member {
 
     String name;
 
+    String authority;
+
     public static Member create(
         @Nullable Long id,
         String loginId,
         String password,
-        String name
+        String name,
+        String authority
     ) {
-        return new Member(id, loginId, password, name);
+        return new Member(id, loginId, password, name, authority);
+    }
+
+    public void validatePassword() {
+
     }
 }

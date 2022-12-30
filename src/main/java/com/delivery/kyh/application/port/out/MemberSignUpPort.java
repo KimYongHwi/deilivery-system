@@ -2,6 +2,8 @@ package com.delivery.kyh.application.port.out;
 
 import com.delivery.kyh.domain.Member;
 
+import java.util.Optional;
+
 public interface MemberSignUpPort {
-    Member signUp(Member member);
+    Optional<Member> signUp(Member member);
 }
