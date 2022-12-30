@@ -1,0 +1,31 @@
+spring:
+  profiles:
+    active: test
+
+  datasource:
+    hikari:
+      jdbc-url: jdbc:h2:mem:delivery-system
+      username: sa
+      password:
+      driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        default_batch_fetch_size: 100
+    open-in-view: false
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
+
+jwt:
+  secret: b4db9bb555841c3078abdcd0425b008dbf983273822ee3d476332f48bf765565
