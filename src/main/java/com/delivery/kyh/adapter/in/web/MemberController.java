@@ -24,6 +24,9 @@ public class MemberController {
 
     private final AuthUseCase authUseCase;
 
+    private final CheckoutUseCase checkoutUseCase;
+
+
     @PostMapping("/sign-up")
     public Map<String, Boolean> signUp(@RequestBody SignUpRequest request) {
         boolean isSignUp = authUseCase.signUp(request);
@@ -34,5 +37,13 @@ public class MemberController {
     @PostMapping("/sign-in")
     public TokenInfo signIn(@RequestBody SignInRequest request) {
         return authUseCase.signIn(request);
+    }
+
+    @PostMapping("/check-out")
+    public Map<String, Boolean> checkout(@RequestBody CheckoutRequest request, Principal principal) {
+        request.setMemberId(Long.valueOf(principal.getName()));
+        boolean isCheckout = checkoutUseCase.checkout(request);
+
+        return Map.of("isCheckout", isCheckout);
     }
 }
