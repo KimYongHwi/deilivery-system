@@ -4,6 +4,9 @@ import com.delivery.kyh.common.OrderItemState;
 import com.delivery.kyh.domain.vo.Address;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Value;
 import org.springframework.lang.Nullable;
 
 import static com.delivery.kyh.common.ErrorMessage.CAN_NOT_CANCEL_DELIVERY_COMPLETE;
@@ -12,12 +15,14 @@ import static com.delivery.kyh.common.ErrorMessage.CAN_NOT_CHANGE_ADDRESS_DELIVE
 import static com.delivery.kyh.common.ErrorMessage.CAN_NOT_CHANGE_ADDRESS_IN_DELIVERY;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter
 public class OrderItem {
     @Nullable
     Long id;
 
-    @Nullable
-    Delivery Delivery;
+    Long memberId;
+
+    int paidAmount;
 
     Address address;
 
@@ -25,11 +30,12 @@ public class OrderItem {
 
     public static OrderItem create(
         @Nullable Long id,
-        @Nullable Delivery delivery,
+        Long memberId,
+        int paidAmount,
         Address address,
         OrderItemState state
     ) {
-        return new OrderItem(id, delivery, address, state);
+        return new OrderItem(id, memberId, paidAmount, address, state);
     }
 
     public void cancel() {

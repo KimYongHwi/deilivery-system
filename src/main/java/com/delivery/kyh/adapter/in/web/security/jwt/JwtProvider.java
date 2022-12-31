@@ -1,6 +1,6 @@
 package com.delivery.kyh.adapter.in.web.security.jwt;
 
-import com.jobis.test.member.application.port.out.response.TokenInfo;
+import com.delivery.kyh.application.port.out.response.TokenInfo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
