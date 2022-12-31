@@ -10,7 +10,9 @@ public enum ErrorMessage {
 
     CAN_NOT_CHANGE_ADDRESS_DELIVERY_COMPLETE("배달완료후에는 주소를 변경할 수 없습니다."),
 
-    NOT_FOUND_MEMBER("회원을 찾을 수 없습니다.");
+    NOT_FOUND_MEMBER("회원을 찾을 수 없습니다."),
+
+    NOT_FOUND_DRIVER("배달기사를 찾을 수 없습니다.");
 
     private String message;
 
