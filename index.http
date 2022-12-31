@@ -1,0 +1,29 @@
+### signup
+POST http://localhost:9000/member/sign-up
+Content-Type: application/json
+
+{
+  "loginId": "test1",
+  "password": "test",
+  "name": "test"
+}
+
+### signin
+POST http://localhost:9000/member/sign-in
+Content-Type: application/json
+
+{
+  "loginId": "test1",
+  "password": "test"
+}
+
+### checkout
+POST http://localhost:9000/checkout
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxOnRlc3QxIiwiYXV0aCI6IlJPTEVfVVNFUiIsImV4cCI6MTY3MjU3Njc0MH0.OfCsE-e444PpmEH3_afqu93TQzY9WoCpR2jqiEway_c
+
+{
+  "paidAmount": "100",
+  "postcode": "test1",
+  "address": "test2"
+}

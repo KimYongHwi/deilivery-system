@@ -3,6 +3,8 @@ package com.delivery.kyh;
 import com.delivery.kyh.adapter.in.web.request.CheckoutRequest;
 import com.delivery.kyh.adapter.in.web.request.SignInRequest;
 import com.delivery.kyh.adapter.in.web.request.SignUpRequest;
+import com.delivery.kyh.adapter.out.persistence.delivery.DeliveryJpaEntity;
+import com.delivery.kyh.adapter.out.persistence.delivery.DeliveryJpaRepository;
 import com.delivery.kyh.adapter.out.persistence.driver.DriverJpaEntity;
 import com.delivery.kyh.adapter.out.persistence.driver.DriverJpaRepository;
 import com.delivery.kyh.adapter.out.persistence.member.MemberJpaEntity;
@@ -27,9 +29,13 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.delivery.kyh.common.ErrorMessage.DUPLICATE_LOGIN_ID;
 import static com.delivery.kyh.common.ErrorMessage.NOT_FOUND_MEMBER;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -49,6 +55,9 @@ public class DeliverySystemApplicationTest {
     private ObjectMapper objectMapper;
 
     @Autowired
+    private DeliveryJpaRepository deliveryJpaRepository;
+
+    @Autowired
     private DriverJpaRepository driverJpaRepository;
 
     @Autowired
@@ -60,13 +69,16 @@ public class DeliverySystemApplicationTest {
     private String loginId = "barogo";
 
     private String password = "barogo";
+
     @Autowired
     private MemberJpaRepository memberJpaRepository;
+
+    private DriverJpaEntity driverJpaEntity;
 
     @PostConstruct
     void init() throws Exception {
         signup(new SignUpRequest(loginId, password, "barogo"));
-        driverJpaRepository.save(new DriverJpaEntity(null, "test", "test"));
+        driverJpaEntity = driverJpaRepository.save(new DriverJpaEntity(null, "test", "test"));
     }
 
     @Test
@@ -144,7 +156,7 @@ public class DeliverySystemApplicationTest {
     @Test
     @WithMockUser(value = "1:barogo")
     void checkout_라우트는_주문정보를_저장한다() throws Exception {
-        CheckoutRequest req = new CheckoutRequest(1L, 100, "test", "test");
+        CheckoutRequest req = new CheckoutRequest(null, 100, "test", "test");
 
         mockMvc.perform(
                 post("/checkout")
@@ -163,6 +175,28 @@ public class DeliverySystemApplicationTest {
         assertThat(orderItem.getAddress()).isEqualTo(req.getAddress());
         assertThat(orderItem.getPostcode()).isEqualTo(req.getPostcode());
         assertThat(orderItem.getState()).isEqualTo(OrderItemState.IN_DELIVERY);
+    }
+
+    @Test
+    @WithMockUser(value = "1:barogo")
+    void delivery_라우트는_3일치의_Delivery_목록을_조회한다() throws Exception {
+        Long memberId = 1L;
+        List<OrderItemJpaEntity> orderItemEntities = orderItemJpaRepository.saveAll(List.of(
+                new OrderItemJpaEntity(null, memberId, 100, "test", "test", OrderItemState.IN_DELIVERY),
+                new OrderItemJpaEntity(null, memberId, 100, "test", "test", OrderItemState.IN_DELIVERY),
+                new OrderItemJpaEntity(null, memberId, 100, "test", "test", OrderItemState.IN_DELIVERY)
+            )
+        );
+
+        List<DeliveryJpaEntity> deliveryJpaEntities = orderItemEntities.stream().map(e -> new DeliveryJpaEntity(null, e.getId(), driverJpaEntity)).collect(Collectors.toList());
+
+        deliveryJpaRepository.saveAll(deliveryJpaEntities);
+
+        mockMvc.perform(
+                get("/delivery")
+                    .contentType(MediaType.APPLICATION_JSON)
+            ).andDo(print())
+            .andExpect(status().isOk());
     }
 
     private ResultActions signup(SignUpRequest req) throws Exception {
