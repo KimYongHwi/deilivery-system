@@ -1,7 +1,7 @@
 package com.delivery.kyh.adapter.out.persistence.member;
 
 import com.delivery.kyh.application.port.in.FindMemberPort;
-import com.delivery.kyh.application.port.out.MemberSignUpPort;
+import com.delivery.kyh.application.port.out.SignUpPort;
 import com.delivery.kyh.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class MemberJpaRepositoryAdapter implements MemberSignUpPort, FindMemberPort {
+public class MemberJpaRepositoryAdapter implements SignUpPort, FindMemberPort {
 
     private final MemberMapper mapper;
 

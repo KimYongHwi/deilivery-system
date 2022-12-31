@@ -1,5 +1,6 @@
 package com.delivery.kyh.adapter.out.persistence.member;
 
+import com.delivery.kyh.adapter.in.web.request.SignUpRequest;
 import com.delivery.kyh.domain.Member;
 import com.delivery.kyh.domain.vo.Authority;
 import org.springframework.stereotype.Component;
@@ -26,5 +27,15 @@ public class MemberMapper {
             m.getName(),
             m.getAuthority().name()
         ));
+    }
+
+    public Member toDomainEntity(SignUpRequest request) {
+        return Member.create(
+            null,
+            request.getLoginId(),
+            request.getPassword(),
+            request.getName(),
+            request.getAuthority()
+        );
     }
 }
