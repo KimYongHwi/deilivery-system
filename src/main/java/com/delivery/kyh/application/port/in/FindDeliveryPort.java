@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface FindDeliveryPort {
     List<Delivery> findDeliveryByMemberIdAndCreatedAtGoe(Long memberId, LocalDateTime createdAt);
+
+//    Delivery
 }

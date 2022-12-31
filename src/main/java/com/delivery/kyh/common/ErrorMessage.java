@@ -16,6 +16,8 @@ public enum ErrorMessage {
 
     NOT_FOUND_MEMBER("회원을 찾을 수 없습니다."),
 
+    NOT_FOUND_ORDER_ITEM("주문번호를 찾을 수 없습니다."),
+
     NOT_FOUND_DRIVER("배달기사를 찾을 수 없습니다.");
 
     private String message;

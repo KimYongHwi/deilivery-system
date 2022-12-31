@@ -48,6 +48,14 @@ public class OrderItem {
         this.state = OrderItemState.CANCEL;
     }
 
+    public void changeInDeliveryState() {
+        if (!this.state.getState().equals(OrderItemState.ORDER.getState())) {
+            throw new IllegalStateException();
+        }
+
+        this.state = OrderItemState.IN_DELIVERY;
+    }
+
     public void changeAddress(Address address) {
         if (isInDelivery()) {
             throw new IllegalStateException(CAN_NOT_CHANGE_ADDRESS_IN_DELIVERY.getMessage());

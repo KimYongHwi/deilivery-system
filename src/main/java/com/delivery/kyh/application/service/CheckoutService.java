@@ -1,13 +1,11 @@
 package com.delivery.kyh.application.service;
 
 import com.delivery.kyh.adapter.in.web.request.CheckoutRequest;
-import com.delivery.kyh.application.port.in.FindDriverPort;
-import com.delivery.kyh.application.port.out.CheckoutPort;
-import com.delivery.kyh.application.port.out.CreateDeliveryPort;
+import com.delivery.kyh.adapter.in.web.request.UpdateAddressRequest;
+import com.delivery.kyh.application.port.in.FindOrderItemPort;
+import com.delivery.kyh.application.port.out.CommandOrderItemPort;
 import com.delivery.kyh.application.usecase.CheckoutUseCase;
 import com.delivery.kyh.common.OrderItemState;
-import com.delivery.kyh.domain.Delivery;
-import com.delivery.kyh.domain.Driver;
 import com.delivery.kyh.domain.OrderItem;
 import com.delivery.kyh.domain.vo.Address;
 import lombok.RequiredArgsConstructor;
@@ -18,28 +16,30 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 public class CheckoutService implements CheckoutUseCase {
+    private final CommandOrderItemPort commandOrderItemPort;
 
-    private final CheckoutPort checkoutPort;
-
-    private final CreateDeliveryPort createDeliveryPort;
-
-    private final FindDriverPort findDriverPort;
+    private final FindOrderItemPort findOrderItemPort;
 
     @Override
     public boolean checkout(CheckoutRequest request) {
-        OrderItem savedOrderItem = checkoutPort.checkout(OrderItem.create(
+        commandOrderItemPort.checkout(OrderItem.create(
             null,
             request.getMemberId(),
             request.getPaidAmount(),
             new Address(request.getPostcode(), request.getAddress()),
-            OrderItemState.IN_DELIVERY
+            OrderItemState.ORDER
         ));
 
-        Driver driver = findDriverPort.findById(1L);
-        Delivery delivery = Delivery.create(null, savedOrderItem.getId(), driver);
-
-        createDeliveryPort.createDelivery(delivery);
-
         return true;
+    }
+
+    @Override
+    public boolean updateAddress(Long orderItemId, Long memberId, UpdateAddressRequest req) {
+        OrderItem item = findOrderItemPort.findByIdAndMemberId(orderItemId, memberId);
+        item.changeAddress(new Address(req.getPostcode(), req.getAddress()));
+
+        commandOrderItemPort.updateAddress(item);
+
+        return false;
     }
 }

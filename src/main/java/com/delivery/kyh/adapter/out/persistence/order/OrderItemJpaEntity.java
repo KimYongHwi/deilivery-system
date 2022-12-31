@@ -62,4 +62,8 @@ public class OrderItemJpaEntity {
         this.address = address;
         this.state = state;
     }
+
+    public void changeState(OrderItemState state) {
+        this.state = state;
+    }
 }
