@@ -2,6 +2,10 @@ package com.delivery.kyh.adapter.out.persistence;
 
 import com.delivery.kyh.adapter.out.persistence.config.BasicDataSourceConfig;
 import com.delivery.kyh.adapter.out.persistence.config.JPAQueryFactoryConfig;
+import com.delivery.kyh.adapter.out.persistence.member.MemberJpaEntity;
+import com.delivery.kyh.adapter.out.persistence.member.MemberJpaRepository;
+import com.delivery.kyh.adapter.out.persistence.member.MemberJpaRepositoryAdapter;
+import com.delivery.kyh.adapter.out.persistence.member.MemberMapper;
 import com.delivery.kyh.domain.Member;
 import com.delivery.kyh.domain.vo.Authority;
 import org.junit.jupiter.api.DisplayName;
@@ -13,8 +17,6 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 
-import java.util.Optional;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -23,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ContextConfiguration(classes = {BasicDataSourceConfig.class, JPAQueryFactoryConfig.class, MemberMapper.class, MemberJpaRepository.class, MemberJpaRepositoryAdapter.class})
 @EnableAutoConfiguration(exclude = DataSourceAutoConfiguration.class)
-@DisplayName("RefundTaxJpaRepositoryAdapterTest 유닛 테스트")
+@DisplayName("MemberJpaRepositoryAdapter 유닛 테스트")
 public class MemberJpaRepositoryAdapterTest {
     @Autowired
     private MemberJpaRepository repository;

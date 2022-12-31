@@ -2,6 +2,10 @@ package com.delivery.kyh.adapter.out.persistence;
 
 import com.delivery.kyh.adapter.out.persistence.config.BasicDataSourceConfig;
 import com.delivery.kyh.adapter.out.persistence.config.JPAQueryFactoryConfig;
+import com.delivery.kyh.adapter.out.persistence.order.OrderItemJpaEntity;
+import com.delivery.kyh.adapter.out.persistence.order.OrderItemJpaRepository;
+import com.delivery.kyh.adapter.out.persistence.order.OrderItemJpaRepositoryAdapter;
+import com.delivery.kyh.adapter.out.persistence.order.OrderItemMapper;
 import com.delivery.kyh.common.OrderItemState;
 import com.delivery.kyh.domain.OrderItem;
 import com.delivery.kyh.domain.vo.Address;
@@ -20,7 +24,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ContextConfiguration(classes = {BasicDataSourceConfig.class, JPAQueryFactoryConfig.class, OrderItemMapper.class, OrderItemJpaRepository.class, OrderItemJpaRepositoryAdapter.class})
 @EnableAutoConfiguration(exclude = DataSourceAutoConfiguration.class)
-@DisplayName("MemberJpaRepositoryAdapter 유닛 테스트")
+@DisplayName("OrderJpaRepositoryAdapter 유닛 테스트")
 public class OrderItemJpaRepositoryAdapterTest {
 
     @Autowired
@@ -39,8 +43,14 @@ public class OrderItemJpaRepositoryAdapterTest {
             OrderItemState.ORDER
         );
 
-        OrderItem actual = repositoryAdapter.checkout(given);
+        OrderItem saved = repositoryAdapter.checkout(given);
+        OrderItemJpaEntity actual = repository.findById(saved.getId()).get();
 
         assertThat(actual.getId()).isNotNull();
+        assertThat(actual.getMemberId()).isEqualTo(given.getMemberId());
+        assertThat(actual.getMemberId()).isEqualTo(given.getMemberId());
+        assertThat(actual.getPostcode()).isEqualTo(given.getAddress().getPostcode());
+        assertThat(actual.getAddress()).isEqualTo(given.getAddress().getAddress());
+        assertThat(actual.getState()).isEqualTo(given.getState());
     }
 }

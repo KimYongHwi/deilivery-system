@@ -1,4 +1,4 @@
-package com.delivery.kyh.adapter.out.persistence;
+package com.delivery.kyh.adapter.out.persistence.member;
 
 import com.delivery.kyh.domain.Member;
 import com.delivery.kyh.domain.vo.Authority;

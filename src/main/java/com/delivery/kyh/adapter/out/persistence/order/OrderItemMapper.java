@@ -1,4 +1,4 @@
-package com.delivery.kyh.adapter.out.persistence;
+package com.delivery.kyh.adapter.out.persistence.order;
 
 import com.delivery.kyh.domain.OrderItem;
 import com.delivery.kyh.domain.vo.Address;

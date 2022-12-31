@@ -4,9 +4,7 @@ import com.delivery.kyh.common.OrderItemState;
 import com.delivery.kyh.domain.vo.Address;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
-import lombok.Value;
 import org.springframework.lang.Nullable;
 
 import static com.delivery.kyh.common.ErrorMessage.CAN_NOT_CANCEL_DELIVERY_COMPLETE;

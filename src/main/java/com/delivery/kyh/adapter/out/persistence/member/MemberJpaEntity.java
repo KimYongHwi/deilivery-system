@@ -1,8 +1,9 @@
-package com.delivery.kyh.adapter.out.persistence;
+package com.delivery.kyh.adapter.out.persistence.member;
 
 import com.delivery.kyh.domain.vo.Authority;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -16,7 +17,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "member")
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class MemberJpaEntity {

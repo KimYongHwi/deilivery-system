@@ -1,4 +1,4 @@
-package com.delivery.kyh.adapter.out.persistence;
+package com.delivery.kyh.adapter.out.persistence.order;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
