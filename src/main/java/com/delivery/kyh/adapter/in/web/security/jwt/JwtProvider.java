@@ -67,8 +67,8 @@ public class JwtProvider {
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         }
 
-        String userId = claims.getSubject();
-        UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
+        String loginId = claims.getSubject();
+        UserDetails userDetails = userDetailsService.loadUserByUsername(loginId);
 
         return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
     }

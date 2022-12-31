@@ -4,6 +4,7 @@ import com.delivery.kyh.application.port.in.FindMemberPort;
 import com.delivery.kyh.application.port.out.SignUpPort;
 import com.delivery.kyh.domain.Member;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -11,6 +12,7 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class MemberJpaRepositoryAdapter implements SignUpPort, FindMemberPort {
+    private final PasswordEncoder passwordEncoder;
 
     private final MemberMapper mapper;
 
@@ -18,7 +20,7 @@ public class MemberJpaRepositoryAdapter implements SignUpPort, FindMemberPort {
 
     @Override
     public Optional<Member> signUp(Member member) {
-        MemberJpaEntity entity = mapper.toJpaEntity(member);
+        MemberJpaEntity entity = mapper.toJpaEntity(member, passwordEncoder);
         repository.save(entity);
 
         return mapper.toDomainEntity(Optional.of(entity));

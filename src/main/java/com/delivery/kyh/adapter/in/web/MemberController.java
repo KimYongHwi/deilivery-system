@@ -1,20 +1,15 @@
 package com.delivery.kyh.adapter.in.web;
 
-import com.delivery.kyh.adapter.in.web.request.CheckoutRequest;
 import com.delivery.kyh.adapter.in.web.request.SignInRequest;
 import com.delivery.kyh.adapter.in.web.request.SignUpRequest;
 import com.delivery.kyh.application.port.out.response.TokenInfo;
 import com.delivery.kyh.application.usecase.AuthUseCase;
-import com.delivery.kyh.application.usecase.CheckoutUseCase;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.security.Principal;
 import java.util.Map;
 
 @RestController
@@ -23,8 +18,6 @@ import java.util.Map;
 public class MemberController {
 
     private final AuthUseCase authUseCase;
-
-    private final CheckoutUseCase checkoutUseCase;
 
 
     @PostMapping("/sign-up")
@@ -37,13 +30,5 @@ public class MemberController {
     @PostMapping("/sign-in")
     public TokenInfo signIn(@RequestBody SignInRequest request) {
         return authUseCase.signIn(request);
-    }
-
-    @PostMapping("/check-out")
-    public Map<String, Boolean> checkout(@RequestBody CheckoutRequest request, Principal principal) {
-        request.setMemberId(Long.valueOf(principal.getName()));
-        boolean isCheckout = checkoutUseCase.checkout(request);
-
-        return Map.of("isCheckout", isCheckout);
     }
 }

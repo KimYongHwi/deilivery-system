@@ -26,13 +26,19 @@ import static com.delivery.kyh.common.ErrorMessage.INVALID_LOGIN_INFO;
 @Transactional
 public class AuthService implements AuthUseCase {
     private final FindMemberPort findMemberPort;
+
     private final JwtProvider jwtProvider;
+
     private final MemberMapper memberMapper;
+
     private final PasswordEncoder passwordEncoder;
+
     private final SignUpPort signUpPort;
+
     private final UserDetailsService userDetailsService;
 
     @Override
+    @Transactional
     public TokenInfo signIn(SignInRequest request) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getLoginId());
         boolean isMatch = passwordEncoder.matches(request.getPassword(), userDetails.getPassword());
@@ -47,6 +53,7 @@ public class AuthService implements AuthUseCase {
     }
 
     @Override
+    @Transactional
     public boolean signUp(SignUpRequest request) {
         Member member = memberMapper.toDomainEntity(request);
         member.validatePassword();

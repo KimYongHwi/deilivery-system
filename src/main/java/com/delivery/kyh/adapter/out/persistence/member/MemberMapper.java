@@ -3,17 +3,18 @@ package com.delivery.kyh.adapter.out.persistence.member;
 import com.delivery.kyh.adapter.in.web.request.SignUpRequest;
 import com.delivery.kyh.domain.Member;
 import com.delivery.kyh.domain.vo.Authority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 @Component
 public class MemberMapper {
-    public MemberJpaEntity toJpaEntity(Member member) {
+    public MemberJpaEntity toJpaEntity(Member member, PasswordEncoder passwordEncoder) {
         return new MemberJpaEntity(
             member.getId() == null ? null : member.getId(),
             member.getLoginId(),
-            member.getPassword(),
+            passwordEncoder.encode(member.getPassword()),
             member.getName(),
             Authority.USER
         );
