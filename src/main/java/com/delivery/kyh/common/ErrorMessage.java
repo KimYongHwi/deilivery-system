@@ -10,6 +10,10 @@ public enum ErrorMessage {
 
     CAN_NOT_CHANGE_ADDRESS_DELIVERY_COMPLETE("배달완료후에는 주소를 변경할 수 없습니다."),
 
+    DUPLICATE_LOGIN_ID("해당 사용중인 ID 입니다"),
+
+    INVALID_LOGIN_INFO("아이디 또는 비밀번호를 확인해주세요"),
+
     NOT_FOUND_MEMBER("회원을 찾을 수 없습니다."),
 
     NOT_FOUND_DRIVER("배달기사를 찾을 수 없습니다.");
