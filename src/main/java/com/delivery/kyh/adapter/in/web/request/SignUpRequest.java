@@ -8,6 +8,5 @@ public class SignUpRequest {
     String loginId;
     String password;
     String name;
-
     String authority = Authority.USER.name();
 }

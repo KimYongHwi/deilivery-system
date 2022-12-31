@@ -18,7 +18,8 @@ public class CustomUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Member member = findMemberPort.findByLoginId(username)
+        String loginId = username.contains(":") ? username.split(":")[1] : username;
+        Member member = findMemberPort.findByLoginId(loginId)
             .orElseThrow(() -> {
                 throw new IllegalArgumentException(NOT_FOUND_MEMBER.getMessage());
             });
@@ -28,7 +29,7 @@ public class CustomUserDetailService implements UserDetailsService {
 
     private UserDetails createUserDetails(Member member) {
         return User.builder()
-            .username(member.getId().toString())
+            .username(member.getId() + ":" + member.getLoginId())
             .password(member.getPassword())
             .roles(member.getAuthority())
             .build();
