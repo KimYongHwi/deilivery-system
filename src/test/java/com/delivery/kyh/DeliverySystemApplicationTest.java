@@ -72,7 +72,7 @@ public class DeliverySystemApplicationTest {
 
     private String loginId = "barogo";
 
-    private String password = "barogo";
+    private String password = "Testtest1234";
 
     @Autowired
     private MemberJpaRepository memberJpaRepository;
@@ -87,7 +87,7 @@ public class DeliverySystemApplicationTest {
 
     @Test
     void signup_라우트는_전달받은_loginId가_이미_저장돼있을_경우_400을_리턴한다() throws Exception {
-        SignUpRequest req = new SignUpRequest("barogo", "test", "test");
+        SignUpRequest req = new SignUpRequest("barogo", password, "test");
 
         signup(req)
             .andDo(print())
@@ -97,7 +97,7 @@ public class DeliverySystemApplicationTest {
 
     @Test
     void signup_라우트는_사용자_정보를_저장한다() throws Exception {
-        SignUpRequest req = new SignUpRequest("test", "test", "test");
+        SignUpRequest req = new SignUpRequest("test", password, "test");
 
         signup(req)
             .andDo(print())
@@ -116,7 +116,7 @@ public class DeliverySystemApplicationTest {
 
     @Test
     void signin_라우트는_사용자_정보가_잘못된_경우_400을_리턴한다() throws Exception {
-        SignInRequest req = new SignInRequest("test", "test");
+        SignInRequest req = new SignInRequest("test", password);
 
         mockMvc.perform(
                 post("/member/sign-in")
@@ -130,7 +130,7 @@ public class DeliverySystemApplicationTest {
     @Test
     void signin_라우트는_로그인_정보가_사용자_정보와_일치할_경우_200을_리턴한다() throws Exception {
         String userId = "test";
-        String password = "test";
+        String password = "Testtest1234";
         SignUpRequest signupReq = new SignUpRequest(userId, password, "test");
         signup(signupReq);
 
