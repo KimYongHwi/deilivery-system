@@ -16,6 +16,8 @@ public enum ErrorMessage {
 
     INVALID_LOGIN_INFO("아이디 또는 비밀번호를 확인해주세요"),
 
+    INVALID_PASSWORD("비밀번호를 확인해주세요.(영어 대문자, 영어 소문자, 숫자, 특수문자 중 3종류 이상으로 12자리 이상)"),
+
     NOT_FOUND_MEMBER("회원을 찾을 수 없습니다."),
 
     NOT_FOUND_ORDER_ITEM("주문번호를 찾을 수 없습니다."),

@@ -1,6 +1,5 @@
 package com.delivery.kyh.domain;
 
-
 import com.delivery.kyh.common.OrderItemState;
 import com.delivery.kyh.domain.vo.Address;
 import org.junit.jupiter.api.DisplayName;

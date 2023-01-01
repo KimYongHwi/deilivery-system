@@ -3,6 +3,7 @@ package com.delivery.kyh;
 import com.delivery.kyh.adapter.in.web.request.CheckoutRequest;
 import com.delivery.kyh.adapter.in.web.request.SignInRequest;
 import com.delivery.kyh.adapter.in.web.request.SignUpRequest;
+import com.delivery.kyh.adapter.in.web.request.UpdateAddressRequest;
 import com.delivery.kyh.adapter.out.persistence.delivery.DeliveryJpaEntity;
 import com.delivery.kyh.adapter.out.persistence.delivery.DeliveryJpaRepository;
 import com.delivery.kyh.adapter.out.persistence.driver.DriverJpaEntity;
@@ -28,15 +29,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.delivery.kyh.common.ErrorMessage.CANT_NOT_CHANGE_IN_DELIVERY_STATE;
+import static com.delivery.kyh.common.ErrorMessage.CAN_NOT_CHANGE_ADDRESS_IN_DELIVERY;
 import static com.delivery.kyh.common.ErrorMessage.DUPLICATE_LOGIN_ID;
 import static com.delivery.kyh.common.ErrorMessage.NOT_FOUND_MEMBER;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -176,6 +179,49 @@ public class DeliverySystemApplicationTest {
         assertThat(orderItem.getAddress()).isEqualTo(req.getAddress());
         assertThat(orderItem.getPostcode()).isEqualTo(req.getPostcode());
         assertThat(orderItem.getState()).isEqualTo(OrderItemState.ORDER);
+    }
+
+    @Test
+    @WithMockUser(value = "1:barogo")
+    void 배송지_주소_변경_라우트는_해당_주문건이_주소지_변경_가능_상태일_경우_기존의_주소지를_변경한다() throws Exception {
+        Long memberId = 1L;
+        OrderItemJpaEntity orderItemJpaEntity = orderItemJpaRepository.save(
+            new OrderItemJpaEntity(null, memberId, 100, "test", "test", OrderItemState.ORDER)
+        );
+
+        UpdateAddressRequest req = new UpdateAddressRequest("test2", "test2");
+
+        mockMvc.perform(
+                patch("/checkout/" + orderItemJpaEntity.getId() + "/address")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(req))
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.isUpdated").value(true));
+
+        assertEquals(orderItemJpaEntity.getPostcode(), req.getPostcode());
+        assertEquals(orderItemJpaEntity.getAddress(), req.getAddress());
+    }
+
+    @Test
+    @WithMockUser(value = "1:barogo")
+    void 배송지_주소_변경_라우트는_해당_주문건이_주소지_변경_가능_상태가_아닐_경우_400을_리턴한다() throws Exception {
+        Long memberId = 1L;
+        OrderItemJpaEntity orderItemJpaEntity = orderItemJpaRepository.save(
+            new OrderItemJpaEntity(null, memberId, 100, "test", "test", OrderItemState.IN_DELIVERY)
+        );
+
+        UpdateAddressRequest req = new UpdateAddressRequest("test2", "test2");
+
+        mockMvc.perform(
+                patch("/checkout/" + orderItemJpaEntity.getId() + "/address")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(req))
+            )
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value(CAN_NOT_CHANGE_ADDRESS_IN_DELIVERY.getMessage()));
     }
 
     @Test
