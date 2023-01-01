@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.lang.Nullable;
 
+import static com.delivery.kyh.common.ErrorMessage.CANT_NOT_CHANGE_IN_DELIVERY_STATE;
 import static com.delivery.kyh.common.ErrorMessage.CAN_NOT_CANCEL_DELIVERY_COMPLETE;
 import static com.delivery.kyh.common.ErrorMessage.CAN_NOT_CANCEL_IN_DELIVERY;
 import static com.delivery.kyh.common.ErrorMessage.CAN_NOT_CHANGE_ADDRESS_DELIVERY_COMPLETE;
@@ -50,7 +51,7 @@ public class OrderItem {
 
     public void changeInDeliveryState() {
         if (!this.state.getState().equals(OrderItemState.ORDER.getState())) {
-            throw new IllegalStateException();
+            throw new IllegalStateException(CANT_NOT_CHANGE_IN_DELIVERY_STATE.getMessage());
         }
 
         this.state = OrderItemState.IN_DELIVERY;

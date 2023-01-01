@@ -32,6 +32,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.delivery.kyh.common.ErrorMessage.CANT_NOT_CHANGE_IN_DELIVERY_STATE;
 import static com.delivery.kyh.common.ErrorMessage.DUPLICATE_LOGIN_ID;
 import static com.delivery.kyh.common.ErrorMessage.NOT_FOUND_MEMBER;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -174,7 +175,51 @@ public class DeliverySystemApplicationTest {
         assertThat(orderItem.getPaidAmount()).isEqualTo(req.getPaidAmount());
         assertThat(orderItem.getAddress()).isEqualTo(req.getAddress());
         assertThat(orderItem.getPostcode()).isEqualTo(req.getPostcode());
-        assertThat(orderItem.getState()).isEqualTo(OrderItemState.IN_DELIVERY);
+        assertThat(orderItem.getState()).isEqualTo(OrderItemState.ORDER);
+    }
+
+    @Test
+    @WithMockUser(value = "1:barogo")
+    void delivery_생성_라우트는_Delivery를_저장하고_해당_주문건의_OrderItemState를_IN_DELIVERY로_변경한다() throws Exception {
+        Long memberId = 1L;
+        OrderItemJpaEntity orderItemJpaEntity = orderItemJpaRepository.save(
+            new OrderItemJpaEntity(null, memberId, 100, "test", "test", OrderItemState.ORDER)
+        );
+
+        mockMvc.perform(
+                post("/delivery/" + orderItemJpaEntity.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.inDelivery").value(true));
+
+        DeliveryJpaEntity entity = em.createQuery(
+            "SELECT d FROM DeliveryJpaEntity d WHERE d.orderItemId = :orderItemId",
+            DeliveryJpaEntity.class
+        ).setParameter("orderItemId", orderItemJpaEntity.getId()).getSingleResult();
+
+        assertThat(entity.getId()).isNotNull();
+        assertThat(entity.getOrderItemId()).isEqualTo(orderItemJpaEntity.getId());
+        assertThat(entity.getDriver()).isNotNull();
+        assertThat(orderItemJpaEntity.getState()).isEqualTo(OrderItemState.IN_DELIVERY);
+    }
+
+    @Test
+    @WithMockUser(value = "1:barogo")
+    void delivery_생성_라우트는_주문건의_OrderItemState이_ORDER_상태가_아닐_경우_400을_리턴한다() throws Exception {
+        Long memberId = 1L;
+        OrderItemJpaEntity orderItemJpaEntity = orderItemJpaRepository.save(
+            new OrderItemJpaEntity(null, memberId, 100, "test", "test", OrderItemState.IN_DELIVERY)
+        );
+
+        mockMvc.perform(
+                post("/delivery/" + orderItemJpaEntity.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value(CANT_NOT_CHANGE_IN_DELIVERY_STATE.getMessage()));
     }
 
     @Test

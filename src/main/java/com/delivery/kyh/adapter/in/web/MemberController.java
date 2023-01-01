@@ -19,7 +19,6 @@ public class MemberController {
 
     private final AuthUseCase authUseCase;
 
-
     @PostMapping("/sign-up")
     public Map<String, Boolean> signUp(@RequestBody SignUpRequest request) {
         boolean isSignUp = authUseCase.signUp(request);

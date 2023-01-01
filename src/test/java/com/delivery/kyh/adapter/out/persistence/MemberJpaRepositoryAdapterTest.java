@@ -1,5 +1,6 @@
 package com.delivery.kyh.adapter.out.persistence;
 
+import com.delivery.kyh.DeliverySystemConfiguration;
 import com.delivery.kyh.adapter.out.persistence.config.BasicDataSourceConfig;
 import com.delivery.kyh.adapter.out.persistence.config.JPAQueryFactoryConfig;
 import com.delivery.kyh.adapter.out.persistence.member.MemberJpaEntity;
@@ -23,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@ContextConfiguration(classes = {BasicDataSourceConfig.class, JPAQueryFactoryConfig.class, MemberMapper.class, MemberJpaRepository.class, MemberJpaRepositoryAdapter.class})
+@ContextConfiguration(classes = {DeliverySystemConfiguration.class, BasicDataSourceConfig.class, JPAQueryFactoryConfig.class, MemberMapper.class, MemberJpaRepository.class, MemberJpaRepositoryAdapter.class})
 @EnableAutoConfiguration(exclude = DataSourceAutoConfiguration.class)
 @DisplayName("MemberJpaRepositoryAdapter 유닛 테스트")
 public class MemberJpaRepositoryAdapterTest {

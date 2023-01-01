@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-
 @DataJpaTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ContextConfiguration(classes = {BasicDataSourceConfig.class, JPAQueryFactoryConfig.class, DeliveryMapper.class, DeliveryJpaRepository.class, DeliveryJpaRepositoryAdapter.class, OrderItemJpaRepository.class})

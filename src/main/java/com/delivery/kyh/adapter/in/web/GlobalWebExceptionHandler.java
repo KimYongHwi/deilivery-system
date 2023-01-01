@@ -18,6 +18,7 @@ public class GlobalWebExceptionHandler {
         value = {
             ConstraintViolationException.class,
             IllegalArgumentException.class,
+            IllegalStateException.class,
             ValidationException.class,
         }
     )

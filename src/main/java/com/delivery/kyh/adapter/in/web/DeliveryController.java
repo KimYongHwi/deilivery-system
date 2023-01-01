@@ -5,7 +5,6 @@ import com.delivery.kyh.application.usecase.QueryDeliveryUseCase;
 import com.delivery.kyh.domain.Delivery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,19 +23,19 @@ public class DeliveryController {
 
     private final QueryDeliveryUseCase queryDeliveryUseCase;
 
-    @GetMapping
-    public List<Delivery> getDeliveries(Principal principal) {
-        LocalDateTime createdAt = LocalDateTime.now().minusDays(3);
-        Long memberId = Long.valueOf(principal.getName().split(":")[0]);
-
-        return queryDeliveryUseCase.findDeliveryByMemberIdAndCreatedAtGoe(memberId, createdAt);
-    }
-
     @PostMapping("/{orderItemId}")
     public Map<String, Boolean> createDelivery(@PathVariable Long orderItemId, Principal principal) {
         Long memberId = Long.valueOf(principal.getName().split(":")[0]);
         boolean inDelivery = commandDeliveryUseCase.createDelivery(orderItemId, memberId);
 
         return Map.of("inDelivery", inDelivery);
+    }
+
+    @GetMapping
+    public List<Delivery> getDeliveries(Principal principal) {
+        LocalDateTime createdAt = LocalDateTime.now().minusDays(3);
+        Long memberId = Long.valueOf(principal.getName().split(":")[0]);
+
+        return queryDeliveryUseCase.findDeliveryByMemberIdAndCreatedAtGoe(memberId, createdAt);
     }
 }
